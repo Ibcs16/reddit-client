@@ -6,6 +6,7 @@ import getTimeFromNow from "./utils/getTimeFromNow";
 
 interface IPost {
   data: {
+    id: string;
     title: string;
     created_utc: number;
     author: string;
@@ -24,6 +25,7 @@ const App = () => {
       <ul>
         {redditMockedData.map((item: IPost) => (
           <li
+            key={`post-${item.data.id}`}
             style={{
               marginBottom: 10,
             }}
