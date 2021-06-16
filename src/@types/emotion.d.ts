@@ -1,12 +1,16 @@
-import "@emotion/react";
+import '@emotion/react';
+import { ThemeProviderProps } from '@emotion/react';
 
-declare module "@emotion/react" {
+declare module '@emotion/react' {
   export interface Theme {
     colors: {
-      neutrals: {
-        [key: string]: string;
-      };
       primary: string;
+      background: string;
+      text: string;
     };
+  }
+
+  export interface StyledThemeProviderProps extends ThemeProviderProps {
+    theme: Theme;
   }
 }
