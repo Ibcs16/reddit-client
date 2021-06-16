@@ -26,6 +26,6 @@
     "space-before-function-paren": "off",
     "react/prop-types": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
-    "react/react-in-jsx-scope": [1, { "allow": "as-needed" }]
+    "react/react-in-jsx-scope": "off"
   }
 }
