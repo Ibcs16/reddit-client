@@ -1,4 +1,3 @@
-import '@emotion/react';
 import { ThemeProviderProps } from '@emotion/react';
 
 declare module '@emotion/react' {
