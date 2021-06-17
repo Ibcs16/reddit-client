@@ -1,6 +1,8 @@
 import Head from 'next/head';
+import { VStack, HStack, Flex } from '@chakra-ui/react';
 import getTimeFromNow from '../utils/getTimeFromNow';
 import redditMockedData from '../assets/reddit_mock.json';
+import Navigation from '../components/Navigation';
 
 interface IPost {
   data: {
@@ -16,43 +18,31 @@ interface IPost {
 
 const Home: React.FC = () => {
   return (
-    <div>
-      <Head>
-        <title>Reddit Client</title>
-
-        <meta name="description" content="A more elegant RedditClient" />
-      </Head>
-
-      <main>
-        <h1>App working 🚀</h1>
-        <br />
-        <ul>
-          {redditMockedData.map((item: IPost) => (
-            <li
-              key={`post-${item.data.id}`}
-              style={{
-                marginBottom: 10
-              }}
-            >
-              <div>
-                <span>{item.data.author}</span> {' - '}
-                <span>{!item.data.read ? 'New' : 'Read'}</span> {' - '}
-                <span>{getTimeFromNow(item.data.created_utc)}</span>
-              </div>
-              <div>
-                <h3>{item.data.title}</h3>
-              </div>
-              <div>
-                <span>{item.data.num_comments} comments</span>
-              </div>
-
-              {/* <span>{new Date(item.data.created_utc)}</span> */}
-            </li>
-          ))}
-        </ul>
-        <h1>App running 🚀</h1>
-      </main>
-    </div>
+    <VStack h="100vh" spacing={0}>
+      <Flex
+        as="header"
+        h="full"
+        w="full"
+        bg="#fff"
+        pos="sticky"
+        maxH={16}
+        borderBottomColor="secondary.100"
+        borderBottomWidth={1}
+      >
+        <Navigation />
+      </Flex>
+      <HStack
+        h="full"
+        w="full"
+        maxW={1248}
+        spacing={8}
+        marginY={12}
+        marginX="auto"
+      >
+        <Flex as="main" h="full" maxW="sm" w="full" bg="orange" />
+        <Flex as="aside" h="full" flex={1} w="full" bg="red" />
+      </HStack>
+    </VStack>
   );
 };
 
