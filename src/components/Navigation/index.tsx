@@ -1,5 +1,7 @@
 import { FC } from 'react';
-import { Flex, HStack } from '@chakra-ui/react';
+import { HStack } from '@chakra-ui/react';
+import Logo from '../Logo';
+import ProfileButton from '../ProfileButton';
 
 const Navigation: FC = () => {
   return (
@@ -11,8 +13,8 @@ const Navigation: FC = () => {
       maxW={1248}
       marginX="auto"
     >
-      <p>Hello</p>
-      <p>OK</p>
+      <Logo />
+      <ProfileButton nickName="Ibcs16" karmaCount={2} />
     </HStack>
   );
 };

@@ -1,5 +1,4 @@
-import Head from 'next/head';
-import { VStack, HStack, Flex } from '@chakra-ui/react';
+import { VStack, HStack, Flex, Heading } from '@chakra-ui/react';
 import getTimeFromNow from '../utils/getTimeFromNow';
 import redditMockedData from '../assets/reddit_mock.json';
 import Navigation from '../components/Navigation';
@@ -25,7 +24,8 @@ const Home: React.FC = () => {
         w="full"
         bg="#fff"
         pos="sticky"
-        maxH={16}
+        maxH={12}
+        p={2}
         borderBottomColor="secondary.100"
         borderBottomWidth={1}
       >
@@ -39,7 +39,11 @@ const Home: React.FC = () => {
         marginY={12}
         marginX="auto"
       >
-        <Flex as="main" h="full" maxW="sm" w="full" bg="orange" />
+        <Flex as="main" h="full" maxW="sm" w="full" bg="orange">
+          <Heading as="h1" size="lg">
+            Top
+          </Heading>
+        </Flex>
         <Flex as="aside" h="full" flex={1} w="full" bg="red" />
       </HStack>
     </VStack>

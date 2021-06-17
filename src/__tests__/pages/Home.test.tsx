@@ -7,7 +7,7 @@ describe('HomePage', () => {
   it('should render the heading', () => {
     render(<Home />);
 
-    const heading = screen.getByText('App working 🚀');
+    const heading = screen.getByText('Top');
 
     expect(heading).toBeInTheDocument();
   });

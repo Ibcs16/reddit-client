@@ -7,7 +7,8 @@ module.exports = {
   },
   moduleNameMapper: {
     '@pages/(.*)': '<rootDir>/src/pages/$1',
-    '@utils/(.*)': '<rootDir>/src/utils/$1'
+    '@utils/(.*)': '<rootDir>/src/utils/$1',
+    '@components/(.*)': '<rootDir>/src/components/$1'
   },
   testEnvironment: 'jsdom'
 };
