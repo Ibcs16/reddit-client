@@ -1,6 +1,6 @@
 import { VStack, HStack, Flex, Heading } from '@chakra-ui/react';
 import { useState } from 'react';
-import { Head } from 'next/document';
+
 import redditMockedData from '../assets/reddit_mock.json';
 import Navigation from '../components/Navigation';
 import PostsList from '../components/PostsList';
@@ -14,9 +14,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Head>
-        <title>Reddit Client</title>
-      </Head>
       <VStack h="100vh" spacing={0}>
         <Flex
           as="header"

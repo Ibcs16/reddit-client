@@ -3,6 +3,6 @@ import styled from '@emotion/styled';
 
 export const Container = styled(Text)`
   p {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
 `;
