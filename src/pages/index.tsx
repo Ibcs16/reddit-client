@@ -4,18 +4,6 @@ import redditMockedData from '../assets/reddit_mock.json';
 import Navigation from '../components/Navigation';
 import PostsList from '../components/PostsList';
 
-interface IPost {
-  data: {
-    id: string;
-    title: string;
-    created_utc: number;
-    author: string;
-    thumbnail?: string;
-    num_comments: number;
-    read?: boolean;
-  };
-}
-
 const Home: React.FC = () => {
   return (
     <VStack h="100vh" spacing={0}>
@@ -28,8 +16,9 @@ const Home: React.FC = () => {
         top={0}
         maxH={12}
         p={2}
-        borderBottomColor="secondary.100"
+        borderBottomColor="tertiary.100"
         borderBottomWidth={1}
+        zIndex={9999}
       >
         <Navigation />
       </Flex>
@@ -38,24 +27,26 @@ const Home: React.FC = () => {
         w="full"
         maxW={1248}
         spacing={8}
-        // marginY={12}
-        marginX="auto"
         pt={10}
+        px={5}
+        overflow="hidden"
+        marginX="auto"
       >
         <Flex
           as="main"
           h="full"
-          maxW="sm"
+          maxW="lg"
           w="full"
-          bg="orange"
           flexDir="column"
+          overflow="auto"
+          pr={5}
         >
-          <Heading as="h1" size="lg" mb={8}>
+          <Heading as="h1" size="lg" mt={10} mb={8}>
             Top
           </Heading>
-          <PostsList />
+          <PostsList posts={redditMockedData.map(({ data }) => data)} />
         </Flex>
-        <Flex as="aside" h="full" flex={1} w="full" bg="red" />
+        <Flex as="aside" h="full" flex={1} w="full" />
       </HStack>
     </VStack>
   );

@@ -15,7 +15,8 @@ export const defaultTheme = extendTheme({
     canvas: {
       100: '#DAE0E6'
     },
-    secondary: { 100: '#edeff1' }
+    tertiary: { 100: '#edeff1', 300: '#878A8C' },
+    secondary: { 100: 'rgb(0, 121, 211)' }
   },
   styles: {
     global: {

@@ -1,14 +1,17 @@
 import { List, ListItem } from '@chakra-ui/react';
-import PostItem from './PostItem';
+import PostItem, { IPost } from './PostItem';
 
-const PostsList: React.FC = ({ ...others }) => {
+interface PostListProps {
+  posts: IPost[];
+}
+
+const PostsList: React.FC<PostListProps> = ({ posts, ...others }) => {
   return (
     <List {...others}>
-      <ListItem w="full" maxW="md">
-        <PostItem />
-        <PostItem />
-        <PostItem />
-        <PostItem />
+      <ListItem w="full" maxW="lg">
+        {posts?.map((post) => (
+          <PostItem key={post.id} data={post} />
+        ))}
       </ListItem>
     </List>
   );

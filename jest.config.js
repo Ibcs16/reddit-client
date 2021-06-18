@@ -10,5 +10,8 @@ module.exports = {
     '@utils/(.*)': '<rootDir>/src/utils/$1',
     '@components/(.*)': '<rootDir>/src/components/$1'
   },
-  testEnvironment: 'jsdom'
+  testEnvironment: 'jsdom',
+  snapshotSerializers: [
+    '@emotion/jest/serializer' /* if needed other snapshotSerializers should go here */
+  ]
 };

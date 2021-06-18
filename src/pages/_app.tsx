@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@emotion/react';
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import { ChakraProvider } from '@chakra-ui/react';
 import { GlobalStyles } from '../styles/Global';
