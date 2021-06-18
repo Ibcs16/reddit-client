@@ -8,21 +8,24 @@ import {
   HStack
 } from '@chakra-ui/react';
 import { IPost } from '@components/PostsList/PostItem';
-import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { MotionBox } from '../MotionBox';
 import RichText from '../RichText';
-import extractRichText from '../../utils/extractRichText';
 import getFormattedDateTime from '../../utils/getFormattedDateTime';
 import getTimeFromNow from '../../utils/getTimeFromNow';
 
 const EmptyState = () => {
   return (
     <Center w="full" h="full" flexDirection="column">
-      <Image
+      <img
         src="/reddit-body.png"
-        layout="intrinsic"
         width={250}
         height={300}
+        alt="Robot Blinking"
+        style={{
+          objectFit: 'contain'
+        }}
       />
       <Text mt={8} fontSize="xl" fontWeight="bold" color="gray.500">
         Select a post to see it here
@@ -41,39 +44,80 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
   const dateTime = getFormattedDateTime(post?.created_utc);
   const timeFromNow = getTimeFromNow(post?.created_utc);
 
+  useEffect(() => {
+    setIsLoading(true);
+    const timeout = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(timeout);
+  }, [setIsLoading, post]);
+
   if (!post.id) return <EmptyState />;
 
   return (
-    <Box h="full" w="full" bg="white" rounded={8} boxShadow="xs" p={4}>
-      {loading && (
-        <>
-          <SkeletonText skeletonHeight={8} mt="4" noOfLines={1} w="8em" />
-          <SkeletonText skeletonHeight={4} mt="4" noOfLines={4} spacing="2" />
-        </>
-      )}
-      <Box>
-        <HStack w="full" spacing={2} mb={8}>
-          <Link href={`/r/${post?.subreddit}/`} fontSize="xs" fontWeight="bold">
-            r/{post?.subreddit}
-          </Link>
-          <Text
-            marginY="auto"
-            as="span"
-            verticalAlign="middle"
-            color="gray.400"
+    <Box h="full" w="full">
+      <AnimatePresence>
+        {post?.id && (
+          <MotionBox
+            initial={{ opacity: 0, transform: 'scale(0.9)' }}
+            animate={{
+              opacity: 1,
+              transform: 'scale(1)',
+              transition: { delay: 0.2, duration: 0.4 }
+            }}
+            exit={{ opacity: 0 }}
+            bg="white"
+            rounded={8}
+            boxShadow="xs"
+            p={4}
+            h="full"
+            w="full"
           >
-            •
-          </Text>
-          <Text fontSize="xs" color="gray.400" flex={1}>
-            Posted by {post?.author}{' '}
-            <time dateTime={dateTime}>{timeFromNow}</time>
-          </Text>
-        </HStack>
-        <Heading as="h2" fontSize="xl" mb={8}>
-          {post?.title}
-        </Heading>
-        <RichText fontSize="md" id="description" text={post?.selftext_html} />
-      </Box>
+            {loading && (
+              <>
+                <SkeletonText skeletonHeight={8} mt="4" noOfLines={1} w="8em" />
+                <SkeletonText
+                  skeletonHeight={4}
+                  mt="4"
+                  noOfLines={10}
+                  spacing="2"
+                />
+              </>
+            )}
+            {!loading && (
+              <>
+                <HStack w="full" spacing={2} mb={8}>
+                  <Link
+                    href={`/r/${post?.subreddit}/`}
+                    fontSize="xs"
+                    fontWeight="bold"
+                  >
+                    r/{post?.subreddit}
+                  </Link>
+                  <Text
+                    marginY="auto"
+                    as="span"
+                    verticalAlign="middle"
+                    color="gray.400"
+                  >
+                    •
+                  </Text>
+                  <Text fontSize="xs" color="gray.400" flex={1}>
+                    Posted by {post?.author}{' '}
+                    <time dateTime={dateTime}>{timeFromNow}</time>
+                  </Text>
+                </HStack>
+                <Heading as="h2" fontSize="xl" mb={8}>
+                  {post?.title}
+                </Heading>
+                <RichText
+                  fontSize="md"
+                  id="description"
+                  text={post?.selftext_html}
+                />
+              </>
+            )}
+          </MotionBox>
+        )}
+      </AnimatePresence>
     </Box>
   );
 };
