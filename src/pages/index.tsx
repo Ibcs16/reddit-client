@@ -3,6 +3,7 @@ import getTimeFromNow from '../utils/getTimeFromNow';
 import redditMockedData from '../assets/reddit_mock.json';
 import Navigation from '../components/Navigation';
 import PostsList from '../components/PostsList';
+import PostDetails from '../components/PostDetails';
 
 const Home: React.FC = () => {
   return (
@@ -23,7 +24,7 @@ const Home: React.FC = () => {
         <Navigation />
       </Flex>
       <HStack
-        h="full"
+        h="100vh"
         w="full"
         maxW={1248}
         spacing={8}
@@ -31,10 +32,12 @@ const Home: React.FC = () => {
         px={5}
         overflow="hidden"
         marginX="auto"
+        alignItems="flex-start"
       >
         <Flex
           as="main"
           h="full"
+          maxH={900}
           maxW="lg"
           w="full"
           flexDir="column"
@@ -46,7 +49,9 @@ const Home: React.FC = () => {
           </Heading>
           <PostsList posts={redditMockedData.map(({ data }) => data)} />
         </Flex>
-        <Flex as="aside" h="full" flex={1} w="full" />
+        <Flex as="aside" h="full" flex={1} w="full" pt={10} pb={2}>
+          <PostDetails />
+        </Flex>
       </HStack>
     </VStack>
   );

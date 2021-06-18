@@ -73,6 +73,8 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
             borderColor="secondary.100"
             rounded="lg"
             overflow="hidden"
+            as="a"
+            href={url}
           >
             <Box
               bottom={0}
