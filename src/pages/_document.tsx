@@ -28,7 +28,6 @@ class MyDocument extends Document {
             sizes="32x32"
             href="https://www.redditstatic.com/desktop2x/img/favicon/badged-favicon-32x32.png"
           />
-          <title>Reddit Client</title>
 
           <meta name="description" content="A more elegant RedditClient" />
         </Head>

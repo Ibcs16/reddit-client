@@ -3,6 +3,7 @@
 import { render, screen } from '@utils/test-utils';
 import PostItem from '@components/PostsList/PostItem';
 import getTimeFromNow from '@utils/getTimeFromNow';
+import userEvent from '@testing-library/user-event';
 
 jest.mock('next/image', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -25,24 +26,34 @@ const mockedProps = {
   permalink: 'r/subreddit/comments/',
   url: 'fake-url'
 };
+
+const mockedOnClick = jest.fn();
+
 describe('PostItem', () => {
   it('should render post item elements', () => {
-    render(<PostItem data={mockedProps} />);
+    render(<PostItem onClick={mockedOnClick} data={mockedProps} />);
 
     const subredditElement = screen.getByText('r/subreddit');
     const fromMockedDate = getTimeFromNow(mockedProps.created_utc);
-    const postedByElement = screen.getByText(
-      `Posted by author ${fromMockedDate}`
-    );
+    const postedByElement = screen.getByText(`Posted by author`);
+    const postedDateElement = screen.getByText(fromMockedDate);
     const commentsElement = screen.getByText('2 comments');
 
     const postItemElements = [
       subredditElement,
       postedByElement,
-      commentsElement
+      commentsElement,
+      postedDateElement
     ];
 
     postItemElements.forEach((element) => expect(element).toBeInTheDocument());
     expect(commentsElement).toHaveAttribute('href', mockedProps.permalink);
+  });
+
+  it('should handle onClick with provided function', () => {
+    render(<PostItem onClick={mockedOnClick} data={mockedProps} />);
+    const postElement = screen.getByTestId('post-1');
+    userEvent.click(postElement);
+    expect(mockedOnClick).toHaveBeenCalledTimes(1);
   });
 });

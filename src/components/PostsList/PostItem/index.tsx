@@ -1,6 +1,7 @@
 import { Box, Button, HStack, Text, Link, Heading } from '@chakra-ui/react';
 import { ChatIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import Image from 'next/image';
+import getFormattedDateTime from '../../../utils/getFormattedDateTime';
 import getTimeFromNow from '../../../utils/getTimeFromNow';
 import { Container } from './styles';
 
@@ -14,15 +15,19 @@ export interface IPost {
   read?: boolean;
   subreddit: string;
   permalink: string;
-  url: string;
+  url?: string;
+  selftext?: string;
+  selftext_html?: string;
 }
 
 interface PostItemProps {
   data: IPost;
+  onClick(post: IPost): void;
 }
 
-const PostItem: React.FC<PostItemProps> = ({ data }) => {
+const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
   const {
+    id,
     title,
     created_utc,
     author,
@@ -33,6 +38,9 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
     permalink,
     url
   } = data;
+
+  const dateTime = getFormattedDateTime(created_utc);
+  const timeFromNow = getTimeFromNow(created_utc);
 
   return (
     <Container
@@ -45,6 +53,8 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
       marginBottom={4}
       borderWidth={1}
       overflow="hidden"
+      onClick={() => onClick(data)}
+      data-testid={`post-${id}`}
     >
       <HStack w="full" spacing={2} p={3}>
         <Link href={`/r/${subreddit}/`} fontSize="xs" fontWeight="bold">
@@ -54,7 +64,7 @@ const PostItem: React.FC<PostItemProps> = ({ data }) => {
           •
         </Text>
         <Text fontSize="xs" color="gray.400" flex={1}>
-          Posted by {author} {getTimeFromNow(created_utc)}
+          Posted by {author} <time dateTime={dateTime}>{timeFromNow}</time>
         </Text>
         <Box pos="relative" w={3} h={3}>
           <Box rounded={6} boxSize={3} bg="secondary.100" />
