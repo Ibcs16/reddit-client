@@ -1,11 +1,15 @@
-import { Flex, Box } from '@chakra-ui/react';
-import Image from 'next/image';
+import { Flex, Image } from '@chakra-ui/react';
 
 const Logo: React.FC = () => {
   return (
-    <Flex h="full">
-      <Box w={86} h="full" bg="gray.100" />
-    </Flex>
+    <img
+      src="/reddit-icon-logo.png"
+      style={{
+        objectFit: 'contain',
+        height: 20
+      }}
+      alt="Reddit logo"
+    />
   );
 };
 
