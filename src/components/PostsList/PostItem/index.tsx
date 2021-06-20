@@ -1,5 +1,5 @@
 import { Box, Button, HStack, Text, Link, Heading } from '@chakra-ui/react';
-import { ChatIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import { ChatIcon, CloseIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import Image from 'next/image';
 import getFormattedDateTime from '../../../utils/getFormattedDateTime';
 import getTimeFromNow from '../../../utils/getTimeFromNow';
@@ -42,6 +42,15 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
   const dateTime = getFormattedDateTime(created_utc);
   const timeFromNow = getTimeFromNow(created_utc);
 
+  const handleDismissPost = (): void => {};
+
+  const markAsReadPost = (): void => {};
+
+  const handleOnClick = () => {
+    onClick(data);
+    markAsReadPost();
+  };
+
   return (
     <Container
       w="full"
@@ -53,7 +62,7 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
       marginBottom={4}
       borderWidth={1}
       overflow="hidden"
-      onClick={() => onClick(data)}
+      onClick={handleOnClick}
       data-testid={`post-${id}`}
     >
       <HStack w="full" spacing={2} p={3}>
@@ -101,18 +110,29 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
           </Box>
         )}
       </Box>
-      <HStack w="full" borderTopColor="gray.100" borderTopWidth={1}>
+      <HStack w="full" spacing={2} borderTopColor="gray.100" borderTopWidth={1}>
         <Button
           as="a"
           rounded="sm"
           leftIcon={<ChatIcon fontSize="1em" />}
           variant="ghost"
-          fontSize="sm"
+          fontSize="xs"
           color="gray.400"
           fontWeight="medium"
           href={permalink}
         >
           {num_comments} comments
+        </Button>
+        <Button
+          rounded="sm"
+          leftIcon={<CloseIcon fontSize="1em" />}
+          variant="ghost"
+          fontSize="xs"
+          color="gray.400"
+          fontWeight="medium"
+          onClick={handleDismissPost}
+        >
+          Dismiss post
         </Button>
       </HStack>
     </Container>

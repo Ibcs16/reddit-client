@@ -7,8 +7,11 @@ import {
   DrawerBody,
   DrawerOverlay,
   DrawerContent,
-  useDisclosure
+  useDisclosure,
+  Button
 } from '@chakra-ui/react';
+
+import { CloseIcon } from '@chakra-ui/icons';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useDragControls, AnimateSharedLayout } from 'framer-motion';
@@ -61,6 +64,8 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleDismissAllPosts = () => {};
+
   useEffect(() => {
     setResizeHandle(handleResize);
   }, []);
@@ -97,6 +102,7 @@ const Home: React.FC = () => {
             <AnimateSharedLayout>
               <MotionBox
                 as="main"
+                id="postsMotionBox"
                 h="full"
                 maxW="sm"
                 w="full"
@@ -132,9 +138,22 @@ const Home: React.FC = () => {
                 onDrag={onDragContent}
                 dragControls={dragControls}
               >
-                <Heading as="h1" size="lg" mt={10} mb={8}>
-                  Top
-                </Heading>
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Heading as="h1" size="lg" mt={10} mb={8}>
+                    Top
+                  </Heading>
+                  <Button
+                    rounded="sm"
+                    leftIcon={<CloseIcon fontSize="1em" />}
+                    variant="ghost"
+                    fontSize="xs"
+                    color="gray.400"
+                    fontWeight="medium"
+                    onClick={handleDismissAllPosts}
+                  >
+                    Dismiss all
+                  </Button>
+                </Flex>
                 <PostsList
                   handleSelectPost={handleSelectPost}
                   posts={redditMockedData.map(({ data }) => data)}
