@@ -64,7 +64,10 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleDismissAllPosts = () => {};
+  const handleDismissAllPosts = () => {
+    setDrawerAvailable(true);
+    setSelectedPost(null);
+  };
 
   useEffect(() => {
     setResizeHandle(handleResize);
@@ -84,7 +87,7 @@ const Home: React.FC = () => {
           p={2}
           borderBottomColor="tertiary.100"
           borderBottomWidth={1}
-          zIndex={9999}
+          zIndex={3}
         >
           <Navigation />
         </Flex>
@@ -140,7 +143,7 @@ const Home: React.FC = () => {
               >
                 <Flex alignItems="center" justifyContent="space-between">
                   <Heading as="h1" size="lg" mt={10} mb={8}>
-                    Top
+                    Top posts
                   </Heading>
                   <Button
                     rounded="sm"
@@ -178,6 +181,7 @@ const Home: React.FC = () => {
         </MotionBox>
       </VStack>
       <Drawer
+        size="md"
         isOpen={drawerAvailable}
         onClose={() => setDrawerAvailable(false)}
         placement="left"
@@ -185,6 +189,9 @@ const Home: React.FC = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerBody>
+            <Heading as="h1" size="lg" mt={10} mb={8}>
+              Top posts
+            </Heading>
             <PostsList
               handleSelectPost={handleSelectPost}
               posts={redditMockedData.map(({ data }) => data)}

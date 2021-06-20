@@ -17,7 +17,21 @@ import getTimeFromNow from '../../utils/getTimeFromNow';
 
 const EmptyState = () => {
   return (
-    <Center w="full" h="full" flexDirection="column">
+    <MotionBox
+      initial={{ opacity: 0, transform: 'scale(0.9)' }}
+      animate={{
+        opacity: 1,
+        transform: 'scale(1)',
+        transition: { delay: 0.2, duration: 0.4 }
+      }}
+      exit={{ opacity: 0 }}
+      w="full"
+      h="full"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+    >
       <img
         src="/reddit-body.png"
         width={250}
@@ -30,7 +44,7 @@ const EmptyState = () => {
       <Text mt={8} fontSize="xl" fontWeight="bold" color="gray.500">
         Select a post to see it here
       </Text>
-    </Center>
+    </MotionBox>
   );
 };
 
@@ -50,75 +64,79 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
     return () => clearTimeout(timeout);
   }, [setIsLoading, post]);
 
-  if (!post.id) return <EmptyState />;
+  if (!post?.id) {
+    return (
+      <AnimatePresence>
+        <EmptyState />
+      </AnimatePresence>
+    );
+  }
 
   return (
-    <Box h="full" w="full">
-      <AnimatePresence>
-        {post?.id && (
-          <MotionBox
-            initial={{ opacity: 0, transform: 'scale(0.9)' }}
-            animate={{
-              opacity: 1,
-              transform: 'scale(1)',
-              transition: { delay: 0.2, duration: 0.4 }
-            }}
-            exit={{ opacity: 0 }}
-            bg="white"
-            rounded={8}
-            boxShadow="xs"
-            p={4}
-            h="full"
-            w="full"
-          >
-            {loading && (
-              <>
-                <SkeletonText skeletonHeight={8} mt="4" noOfLines={1} w="8em" />
-                <SkeletonText
-                  skeletonHeight={4}
-                  mt="4"
-                  noOfLines={10}
-                  spacing="2"
-                />
-              </>
-            )}
-            {!loading && (
-              <>
-                <HStack w="full" spacing={2} mb={8}>
-                  <Link
-                    href={`/r/${post?.subreddit}/`}
-                    fontSize="xs"
-                    fontWeight="bold"
-                  >
-                    r/{post?.subreddit}
-                  </Link>
-                  <Text
-                    marginY="auto"
-                    as="span"
-                    verticalAlign="middle"
-                    color="gray.400"
-                  >
-                    •
-                  </Text>
-                  <Text fontSize="xs" color="gray.400" flex={1}>
-                    Posted by {post?.author}{' '}
-                    <time dateTime={dateTime}>{timeFromNow}</time>
-                  </Text>
-                </HStack>
-                <Heading as="h2" fontSize="xl" mb={8}>
-                  {post?.title}
-                </Heading>
-                <RichText
-                  fontSize="md"
-                  id="description"
-                  text={post?.selftext_html}
-                />
-              </>
-            )}
-          </MotionBox>
-        )}
-      </AnimatePresence>
-    </Box>
+    <AnimatePresence>
+      {post?.id && (
+        <MotionBox
+          initial={{ opacity: 0, transform: 'scale(0.9)' }}
+          animate={{
+            opacity: 1,
+            transform: 'scale(1)',
+            transition: { delay: 0.2, duration: 0.4 }
+          }}
+          exit={{ opacity: 0, transform: 'scale(0.8)' }}
+          bg="white"
+          rounded={8}
+          boxShadow="xs"
+          p={4}
+          h="full"
+          w="full"
+        >
+          {loading && (
+            <>
+              <SkeletonText skeletonHeight={8} mt="4" noOfLines={1} w="8em" />
+              <SkeletonText
+                skeletonHeight={4}
+                mt="4"
+                noOfLines={10}
+                spacing="2"
+              />
+            </>
+          )}
+          {!loading && (
+            <>
+              <HStack w="full" spacing={2} mb={8}>
+                <Link
+                  href={`/r/${post?.subreddit}/`}
+                  fontSize="xs"
+                  fontWeight="bold"
+                >
+                  r/{post?.subreddit}
+                </Link>
+                <Text
+                  marginY="auto"
+                  as="span"
+                  verticalAlign="middle"
+                  color="gray.400"
+                >
+                  •
+                </Text>
+                <Text fontSize="xs" color="gray.400" flex={1}>
+                  Posted by {post?.author}{' '}
+                  <time dateTime={dateTime}>{timeFromNow}</time>
+                </Text>
+              </HStack>
+              <Heading as="h2" fontSize="xl" mb={8}>
+                {post?.title}
+              </Heading>
+              <RichText
+                fontSize="md"
+                id="description"
+                text={post?.selftext_html}
+              />
+            </>
+          )}
+        </MotionBox>
+      )}
+    </AnimatePresence>
   );
 };
 
