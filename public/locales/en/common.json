@@ -1,0 +1,31 @@
+{
+  "localization": {
+    "change-language": "Change language",
+    "close-language": "Close",
+    "english-us": "English-US",
+    "spanish-es": "Spanish-ES",
+    "portuguese-br": "Portuguese-BR"
+  },
+
+  "navigation": {
+    "menu": {
+      "profile": "Profile",
+      "create-avatar": "Create Avatar"
+    }
+  },
+  "postList": {
+    "title": "Top posts",
+    "dismiss-all": "Dismiss all",
+    "postItem": {
+      "dismiss-post": "Dismiss post",
+      "comments": "Comments",
+      "posted-by": "Posted by"
+    },
+    "load-more": "Load more",
+    "loading": "Loading",
+    "empty": "No post to see here"
+  },
+  "postDetail": {
+    "select-post": "Select a post to see it here"
+  }
+}

@@ -1,4 +1,4 @@
-const withImages = require('next-images');
+const { i18n } = require('./next-i18next.config');
 
 module.exports = {
   reactStrictMode: true,
@@ -10,5 +10,6 @@ module.exports = {
       'b.thumbs.redditmedia.com',
       'images.example.com'
     ]
-  }
+  },
+  i18n
 };

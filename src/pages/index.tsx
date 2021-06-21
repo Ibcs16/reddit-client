@@ -10,7 +10,8 @@ import {
   DrawerContent,
   DrawerCloseButton,
   Spinner,
-  Button
+  Button,
+  Tooltip
 } from '@chakra-ui/react';
 
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
@@ -21,6 +22,7 @@ import Head from 'next/head';
 import { setResizeHandle } from '../utils/resizeHandle';
 
 import Navigation from '../components/Navigation';
+import LanguageSelection from '../components/LanguageSelection';
 import PostsList, { EmptyPostList } from '../components/PostsList';
 import { MotionBox } from '../components/MotionBox';
 import PostDetails from '../components/PostDetails';
@@ -143,6 +145,7 @@ const Home: React.FC = () => {
       <Head>
         <title>Reddit Clone</title>
       </Head>
+
       <VStack h="100vh" spacing={0}>
         <Flex
           as="header"
@@ -305,6 +308,8 @@ const Home: React.FC = () => {
           </DrawerContent>
         </Drawer>
       )}
+
+      <LanguageSelection />
     </>
   );
 };
