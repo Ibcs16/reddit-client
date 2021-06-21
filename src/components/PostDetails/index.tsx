@@ -73,6 +73,8 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
     );
   }
 
+  const detailImage = post.url;
+
   return (
     <AnimatePresence>
       {post?.id && (
@@ -138,7 +140,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
               <Image
                 width={400}
                 height={400}
-                src={post.thumbnail}
+                src={detailImage}
                 layout="responsive"
               />
             </>

@@ -19,6 +19,7 @@ export interface IPost {
   url?: string;
   selftext?: string;
   selftext_html?: string;
+  url_overridden_by_dest?: string;
 }
 
 interface PostItemProps {
