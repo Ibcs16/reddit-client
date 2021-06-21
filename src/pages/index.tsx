@@ -17,6 +17,7 @@ import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useDragControls, AnimateSharedLayout } from 'framer-motion';
+import Head from 'next/head';
 import { setResizeHandle } from '../utils/resizeHandle';
 
 import Navigation from '../components/Navigation';
@@ -139,6 +140,9 @@ const Home: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>Reddit Clone</title>
+      </Head>
       <VStack h="100vh" spacing={0}>
         <Flex
           as="header"
