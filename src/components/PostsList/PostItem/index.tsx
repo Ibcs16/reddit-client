@@ -1,9 +1,11 @@
 import { Box, Button, HStack, Text, Link, Heading } from '@chakra-ui/react';
 import { ChatIcon, CloseIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import Image from 'next/image';
+
 import getFormattedDateTime from '../../../utils/getFormattedDateTime';
 import getTimeFromNow from '../../../utils/getTimeFromNow';
 import { Container } from './styles';
+import { usePosts } from '../../../hooks/usePosts';
 
 export interface IPost {
   id: string;
@@ -41,13 +43,28 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
 
   const dateTime = getFormattedDateTime(created_utc);
   const timeFromNow = getTimeFromNow(created_utc);
+  const {
+    data: postsData,
+
+    mutate
+  } = usePosts<IPost[]>('top.json?limit=5');
 
   const handleDismissPost = (): void => {
     console.log('dimiss posts');
   };
 
   const markAsReadPost = (): void => {
-    console.log('mark read posts');
+    const updatedPosts = postsData?.map((page) => {
+      const updatedPage = page.map((post) => {
+        if (post.id === data.id) {
+          return { ...post, read: true };
+        }
+        return post;
+      });
+      return updatedPage;
+    });
+
+    mutate(updatedPosts, false);
   };
 
   const handleOnClick = () => {
@@ -68,6 +85,9 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
       overflow="hidden"
       onClick={handleOnClick}
       data-testid={`post-${id}`}
+      initial={{ opacity: 0, transform: 'scale(0.9)' }}
+      animate={{ opacity: 1, transform: 'scale(1)' }}
+      transition={{ duration: 0.4 }}
     >
       <HStack w="full" spacing={2} p={3}>
         <Link href={`/r/${subreddit}/`} fontSize="xs" fontWeight="bold">
@@ -79,12 +99,20 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
         <Text fontSize="xs" color="gray.400" flex={1}>
           Posted by {author} <time dateTime={dateTime}>{timeFromNow}</time>
         </Text>
-        <Box pos="relative" w={3} h={3}>
-          <Box rounded={6} boxSize={3} bg="secondary.100" />
-        </Box>
+        {!data.read && (
+          <Box pos="relative" w={3} h={3}>
+            <Box rounded={6} boxSize={3} bg="secondary.100" />
+          </Box>
+        )}
       </HStack>
       <Box flex={1} h="full" w="full" p={3} display="flex">
-        <Heading as="h3" fontSize="md" flex={1} id="title">
+        <Heading
+          as="h3"
+          fontSize="md"
+          flex={1}
+          id="title"
+          noOfLines={[1, 2, 3]}
+        >
           {title}
         </Heading>
         {thumbnail && (

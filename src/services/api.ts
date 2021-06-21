@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'https://reddit.com/r/meme/',
+export const api = axios.create({
+  baseURL: 'https://cors-anywhere.herokuapp.com/https://reddit.com/',
   headers: {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'

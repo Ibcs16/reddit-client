@@ -26,6 +26,7 @@ import { MotionBox } from '../components/MotionBox';
 import PostDetails from '../components/PostDetails';
 import { IPost } from '../components/PostsList/PostItem';
 import { fetcher } from '../services/api';
+import { usePosts } from '../hooks/usePosts';
 
 const Home: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<IPost>({} as IPost);
@@ -73,39 +74,16 @@ const Home: React.FC = () => {
     setSelectedPost(null);
   };
 
-  function getUrl(size, data, index) {
-    const lastItemName =
-      Array.isArray(data) && data?.length ? data[data.length - 1].name : '';
+  const { data, loadMore, isLoadingMore, isLoadingInitialData } =
+    usePosts<IPost[]>('top.json?limit=5');
 
-    if (size <= 1) {
-      return 'top.json?limit=5';
-    }
-    return `top.json?after=${lastItemName}&count=${
-      size && size * 5
-    }&limit=5&raw_json=1`;
-  }
+  const posts = data ? [].concat(...data) : [];
 
-  const { data, error, size, setSize } = useSWRInfinite(
-    (index) => getUrl(size, data, index),
-    fetcher
-  );
-
-  const isLoadingInitialData = !data && !error;
-
-  const isLoadingMore =
-    isLoadingInitialData ||
-    (size > 0 && data && typeof data[size - 1] === 'undefined');
-
-  const loadMore = () => setSize(size + 1);
+  const isEmpty = posts.length === 0 && !isLoadingInitialData;
 
   useEffect(() => {
     setResizeHandle(handleResize);
   }, []);
-
-  const posts = useMemo<IPost[]>(() => {
-    if (!data) return [];
-    return data.data?.children.map(({ data: apiData }) => apiData) || [];
-  }, [data]);
 
   return (
     <>
@@ -175,49 +153,55 @@ const Home: React.FC = () => {
                 onDrag={onDragContent}
                 dragControls={dragControls}
               >
-                <Flex alignItems="center" justifyContent="space-between" />
-                <Heading as="h1" size="lg" mt={10} mb={8}>
-                  Top posts
-                </Heading>
-                {posts.length > 0 && (
+                <Flex alignItems="center" justifyContent="space-between">
+                  <Heading as="h1" size="lg" mt={10} mb={8}>
+                    Top posts
+                  </Heading>
+                  <Button
+                    rounded="sm"
+                    leftIcon={<CloseIcon fontSize="1em" />}
+                    variant="ghost"
+                    fontSize="xs"
+                    color="gray.400"
+                    fontWeight="medium"
+                    onClick={loadMore}
+                    display={isEmpty ? 'none' : 'block'}
+                  >
+                    Dismiss all
+                  </Button>
+                </Flex>
+                {!isEmpty && (
                   <>
-                    <Button
-                      rounded="sm"
-                      leftIcon={<CloseIcon fontSize="1em" />}
-                      variant="ghost"
-                      fontSize="xs"
-                      color="gray.400"
-                      fontWeight="medium"
-                      onClick={loadMore}
-                    >
-                      Dismiss all
-                    </Button>
                     <PostsList
                       handleSelectPost={handleSelectPost}
                       posts={posts.map((postData) => postData)}
                     />
                   </>
                 )}
-                {!posts.length && <EmptyPostList />}
+                {isEmpty && <EmptyPostList />}
 
-                <Button
-                  rounded="md"
-                  variant="solid"
-                  fontSize="xs"
-                  color="white"
-                  fontWeight="medium"
-                  onClick={loadMore}
-                  alignSelf="center"
-                  justifySelf="center"
-                  display="block"
-                  bg="secondary.100"
-                  mb={2}
-                  mx="auto"
-                  isLoading={isLoadingMore}
-                  _hover={{ bg: 'secondary.100', opacity: 0.6 }}
-                >
-                  {posts.length > 0 ? 'Load more' : 'Load posts'}
-                </Button>
+                {isLoadingInitialData && <Spinner color="secondary.100" />}
+
+                {!isLoadingInitialData && (
+                  <Button
+                    rounded="md"
+                    variant="solid"
+                    fontSize="xs"
+                    color="white"
+                    fontWeight="medium"
+                    onClick={loadMore}
+                    alignSelf="center"
+                    justifySelf="center"
+                    display="block"
+                    bg="secondary.100"
+                    mb={2}
+                    mx="auto"
+                    isLoading={isLoadingMore}
+                    _hover={{ bg: 'secondary.100', opacity: 0.6 }}
+                  >
+                    {posts.length > 0 ? 'Load more' : 'Load posts'}
+                  </Button>
+                )}
               </MotionBox>
 
               <MotionBox
@@ -229,7 +213,6 @@ const Home: React.FC = () => {
                 maxH={900}
                 transition={{ duration: 0.4 }}
               >
-                {isLoadingMore && <Spinner />}
                 <Flex h="full" w="full" pt={10} pb={2}>
                   <PostDetails post={selectedPost} />
                 </Flex>

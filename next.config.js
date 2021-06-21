@@ -5,6 +5,10 @@ module.exports = {
   images: {
     esModule: true,
     __esModule: true,
-    domains: ['b.thumbs.redditmedia.com', 'images.example.com']
+    domains: [
+      'a.thumbs.redditmedia.com',
+      'b.thumbs.redditmedia.com',
+      'images.example.com'
+    ]
   }
 };

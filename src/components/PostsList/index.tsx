@@ -28,11 +28,11 @@ const PostsList: React.FC<PostListProps> = ({
 }) => {
   return (
     <List {...others}>
-      <ListItem w="full" maxW="lg">
-        {posts?.map((post) => (
-          <PostItem onClick={handleSelectPost} key={post.id} data={post} />
-        ))}
-      </ListItem>
+      {posts?.map((post) => (
+        <ListItem w="full" maxW="lg" key={post.id}>
+          <PostItem onClick={handleSelectPost} data={post} />
+        </ListItem>
+      ))}
     </List>
   );
 };
