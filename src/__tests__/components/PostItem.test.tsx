@@ -1,5 +1,6 @@
 // Using render and screen from test-utils.js instead of
 // @testing-library/react
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { render, screen } from '@utils/test-utils';
 import PostItem from '@components/PostsList/PostItem';
 import getTimeFromNow from '@utils/getTimeFromNow';
@@ -31,7 +32,14 @@ const mockedOnClick = jest.fn();
 
 describe('PostItem', () => {
   it('should render post item elements', () => {
-    render(<PostItem onClick={mockedOnClick} data={mockedProps} />);
+    render(
+      <PostItem
+        markAsReadPost={() => {}}
+        handleDismissPost={() => {}}
+        onClick={mockedOnClick}
+        data={mockedProps}
+      />
+    );
 
     const subredditElement = screen.getByText('r/subreddit');
     const fromMockedDate = getTimeFromNow(mockedProps.created_utc);
@@ -51,9 +59,16 @@ describe('PostItem', () => {
   });
 
   it('should handle onClick with provided function', () => {
-    render(<PostItem onClick={mockedOnClick} data={mockedProps} />);
-    const postElement = screen.getByTestId('post-1');
-    userEvent.click(postElement);
+    render(
+      <PostItem
+        markAsReadPost={() => {}}
+        handleDismissPost={() => {}}
+        onClick={mockedOnClick}
+        data={mockedProps}
+      />
+    );
+    const postHeaderElement = screen.getByTestId('header');
+    userEvent.click(postHeaderElement);
     expect(mockedOnClick).toHaveBeenCalledTimes(1);
   });
 });

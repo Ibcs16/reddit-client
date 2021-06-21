@@ -71,7 +71,13 @@ const PostItem: React.FC<PostItemProps> = ({
       animate={{ opacity: 1, transform: 'scale(1)' }}
       transition={{ duration: 0.4 }}
     >
-      <HStack onClick={handleOnClick} w="full" spacing={2} p={3}>
+      <HStack
+        onClick={handleOnClick}
+        w="full"
+        spacing={2}
+        p={3}
+        data-testid="header"
+      >
         <Link href={`/r/${subreddit}/`} fontSize="xs" fontWeight="bold">
           r/{subreddit}
         </Link>
