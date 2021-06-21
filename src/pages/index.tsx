@@ -73,7 +73,7 @@ const Home: React.FC = () => {
     setSelectedPost(null);
   };
 
-  function getUrl(size, data) {
+  function getUrl(size, data, index) {
     const lastItemName =
       Array.isArray(data) && data?.length ? data[data.length - 1].name : '';
 
@@ -86,7 +86,7 @@ const Home: React.FC = () => {
   }
 
   const { data, error, size, setSize } = useSWRInfinite(
-    (index) => getUrl(size, data),
+    (index) => getUrl(size, data, index),
     fetcher
   );
 
@@ -198,7 +198,7 @@ const Home: React.FC = () => {
                     />
                   </>
                 )}
-                {!posts.length && <EmptyPostList mb={4} />}
+                {!posts.length && <EmptyPostList />}
 
                 <Button
                   rounded="md"

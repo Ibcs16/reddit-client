@@ -42,9 +42,13 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
   const dateTime = getFormattedDateTime(created_utc);
   const timeFromNow = getTimeFromNow(created_utc);
 
-  const handleDismissPost = (): void => {};
+  const handleDismissPost = (): void => {
+    console.log('dimiss posts');
+  };
 
-  const markAsReadPost = (): void => {};
+  const markAsReadPost = (): void => {
+    console.log('mark read posts');
+  };
 
   const handleOnClick = () => {
     onClick(data);

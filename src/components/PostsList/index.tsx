@@ -1,10 +1,4 @@
-import {
-  List,
-  ListItem,
-  Center,
-  Text,
-  ChakraComponent
-} from '@chakra-ui/react';
+import { List, ListItem, Center, Text } from '@chakra-ui/react';
 import PostItem, { IPost } from './PostItem';
 
 interface PostListProps {
@@ -12,11 +6,9 @@ interface PostListProps {
   handleSelectPost(post: IPost): void;
 }
 
-export const EmptyPostList: React.FC<ChakraComponent<'div'>> = ({
-  ...others
-}) => {
+export const EmptyPostList: React.FC = ({ ...others }) => {
   return (
-    <Center display="flex" flexDirection="column" {...others}>
+    <Center display="flex" flexDirection="column" {...others} mb={4}>
       <img
         src="/reddit-error.png"
         style={{ width: 100, objectFit: 'contain', display: 'block' }}
