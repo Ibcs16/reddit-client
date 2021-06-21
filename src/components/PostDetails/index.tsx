@@ -10,6 +10,7 @@ import {
 import { IPost } from '@components/PostsList/PostItem';
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { MotionBox } from '../MotionBox';
 import RichText from '../RichText';
 import getFormattedDateTime from '../../utils/getFormattedDateTime';
@@ -89,6 +90,8 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
           p={4}
           h="full"
           w="full"
+          position="relative"
+          overflow="auto"
         >
           {loading && (
             <>
@@ -131,6 +134,12 @@ const PostDetails: React.FC<PostDetailsProps> = ({ post }) => {
                 fontSize="md"
                 id="description"
                 text={post?.selftext_html}
+              />
+              <Image
+                width={400}
+                height={400}
+                src={post.thumbnail}
+                layout="responsive"
               />
             </>
           )}

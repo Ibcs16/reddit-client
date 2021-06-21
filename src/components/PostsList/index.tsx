@@ -4,6 +4,8 @@ import PostItem, { IPost } from './PostItem';
 interface PostListProps {
   posts: IPost[];
   handleSelectPost(post: IPost): void;
+  markAsReadPost(post: IPost): void;
+  handleDismissPost(post: IPost): void;
 }
 
 export const EmptyPostList: React.FC = ({ ...others }) => {
@@ -14,8 +16,8 @@ export const EmptyPostList: React.FC = ({ ...others }) => {
         style={{ width: 100, objectFit: 'contain', display: 'block' }}
         alt="Broken robot"
       />
-      <Text fontSize="md" color="gray.400" mt={2}>
-        No posts found
+      <Text fontSize="md" color="gray.400" mt={4}>
+        No posts too see here
       </Text>
     </Center>
   );
@@ -24,13 +26,20 @@ export const EmptyPostList: React.FC = ({ ...others }) => {
 const PostsList: React.FC<PostListProps> = ({
   posts,
   handleSelectPost,
+  markAsReadPost,
+  handleDismissPost,
   ...others
 }) => {
   return (
     <List {...others}>
       {posts?.map((post) => (
         <ListItem w="full" maxW="lg" key={post.id}>
-          <PostItem onClick={handleSelectPost} data={post} />
+          <PostItem
+            markAsReadPost={markAsReadPost}
+            handleDismissPost={handleDismissPost}
+            onClick={handleSelectPost}
+            data={post}
+          />
         </ListItem>
       ))}
     </List>

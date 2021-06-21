@@ -5,7 +5,6 @@ import Image from 'next/image';
 import getFormattedDateTime from '../../../utils/getFormattedDateTime';
 import getTimeFromNow from '../../../utils/getTimeFromNow';
 import { Container } from './styles';
-import { usePosts } from '../../../hooks/usePosts';
 
 export interface IPost {
   id: string;
@@ -25,9 +24,16 @@ export interface IPost {
 interface PostItemProps {
   data: IPost;
   onClick(post: IPost): void;
+  markAsReadPost(post: IPost): void;
+  handleDismissPost(post: IPost): void;
 }
 
-const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
+const PostItem: React.FC<PostItemProps> = ({
+  onClick,
+  markAsReadPost,
+  handleDismissPost,
+  data
+}) => {
   const {
     id,
     title,
@@ -43,33 +49,10 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
 
   const dateTime = getFormattedDateTime(created_utc);
   const timeFromNow = getTimeFromNow(created_utc);
-  const {
-    data: postsData,
-
-    mutate
-  } = usePosts<IPost[]>('top.json?limit=5');
-
-  const handleDismissPost = (): void => {
-    console.log('dimiss posts');
-  };
-
-  const markAsReadPost = (): void => {
-    const updatedPosts = postsData?.map((page) => {
-      const updatedPage = page.map((post) => {
-        if (post.id === data.id) {
-          return { ...post, read: true };
-        }
-        return post;
-      });
-      return updatedPage;
-    });
-
-    mutate(updatedPosts, false);
-  };
 
   const handleOnClick = () => {
     onClick(data);
-    markAsReadPost();
+    markAsReadPost(data);
   };
 
   return (
@@ -83,13 +66,12 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
       marginBottom={4}
       borderWidth={1}
       overflow="hidden"
-      onClick={handleOnClick}
       data-testid={`post-${id}`}
       initial={{ opacity: 0, transform: 'scale(0.9)' }}
       animate={{ opacity: 1, transform: 'scale(1)' }}
       transition={{ duration: 0.4 }}
     >
-      <HStack w="full" spacing={2} p={3}>
+      <HStack onClick={handleOnClick} w="full" spacing={2} p={3}>
         <Link href={`/r/${subreddit}/`} fontSize="xs" fontWeight="bold">
           r/{subreddit}
         </Link>
@@ -105,7 +87,14 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
           </Box>
         )}
       </HStack>
-      <Box flex={1} h="full" w="full" p={3} display="flex">
+      <Box
+        onClick={handleOnClick}
+        flex={1}
+        h="full"
+        w="full"
+        p={3}
+        display="flex"
+      >
         <Heading
           as="h3"
           fontSize="md"
@@ -162,7 +151,7 @@ const PostItem: React.FC<PostItemProps> = ({ onClick, data }) => {
           fontSize="xs"
           color="gray.400"
           fontWeight="medium"
-          onClick={handleDismissPost}
+          onClick={() => handleDismissPost(data)}
         >
           Dismiss post
         </Button>

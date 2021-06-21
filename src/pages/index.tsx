@@ -5,17 +5,16 @@ import {
   Heading,
   Drawer,
   DrawerBody,
+  DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  useDisclosure,
+  DrawerCloseButton,
   Spinner,
   Button
 } from '@chakra-ui/react';
 
-import { useSWRInfinite } from 'swr';
-
-import { CloseIcon } from '@chakra-ui/icons';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useDragControls, AnimateSharedLayout } from 'framer-motion';
 import { setResizeHandle } from '../utils/resizeHandle';
@@ -37,7 +36,10 @@ const Home: React.FC = () => {
 
   const [drawerAvailable, setDrawerAvailable] = useState(false);
 
-  const handleSelectPost = (post: IPost) => setSelectedPost(post);
+  const handleSelectPost = (post: IPost) => {
+    setSelectedPost(post);
+    setDrawerAvailable(false);
+  };
   const dragControls = useDragControls();
 
   const onDragContent = useCallback(
@@ -55,6 +57,47 @@ const Home: React.FC = () => {
     [setShowPosts]
   );
 
+  const {
+    data: postData,
+    loadMore,
+    isLoadingMore,
+    isLoadingInitialData,
+    mutate
+  } = usePosts<IPost[]>('top.json?limit=5');
+
+  const posts = postData ? [].concat(...postData) : [];
+
+  const isEmpty = posts.length === 0 && !isLoadingInitialData;
+
+  const markAsReadPost = (markPost: IPost): void => {
+    const updatedPosts = postData?.map((page) => {
+      const updatedPage = page.map((post) => {
+        if (post.id === markPost.id) {
+          return { ...post, read: true };
+        }
+        return post;
+      });
+      return updatedPage;
+    });
+
+    mutate(updatedPosts, false);
+  };
+
+  const handleDismissAllPosts = () => {
+    setSelectedPost(null);
+
+    mutate([], false);
+  };
+
+  const handleDismissPost = (dismissPost: IPost): void => {
+    const updatedPosts = postData?.map((page) => {
+      const updatedPage = page.filter((post) => post.id !== dismissPost.id);
+      return updatedPage;
+    });
+
+    mutate(updatedPosts, false);
+  };
+
   const handleResize = ({ innerWidth }) => {
     if (innerWidth < 560) {
       setIsMobile(true);
@@ -69,17 +112,26 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleDismissAllPosts = () => {
-    setDrawerAvailable(true);
-    setSelectedPost(null);
-  };
-
-  const { data, loadMore, isLoadingMore, isLoadingInitialData } =
-    usePosts<IPost[]>('top.json?limit=5');
-
-  const posts = data ? [].concat(...data) : [];
-
-  const isEmpty = posts.length === 0 && !isLoadingInitialData;
+  const refreshButton = (
+    <Button
+      rounded="md"
+      variant="solid"
+      fontSize="xs"
+      color="white"
+      fontWeight="medium"
+      onClick={loadMore}
+      alignSelf="center"
+      justifySelf="center"
+      display="block"
+      bg="secondary.100"
+      mb={2}
+      mx="auto"
+      isLoading={isLoadingMore}
+      _hover={{ bg: 'secondary.100', opacity: 0.6 }}
+    >
+      {posts.length > 0 ? 'Load more' : 'Load posts'}
+    </Button>
+  );
 
   useEffect(() => {
     setResizeHandle(handleResize);
@@ -103,6 +155,7 @@ const Home: React.FC = () => {
         >
           <Navigation />
         </Flex>
+
         <MotionBox h="100vh" w="full">
           <HStack
             maxW={1248}
@@ -113,7 +166,22 @@ const Home: React.FC = () => {
             marginX="auto"
             h="full"
             alignItems="flex-start"
+            flexDirection={{ base: 'column', md: 'row' }}
           >
+            {isMobile && (
+              <Button
+                mt={4}
+                mb={-25}
+                ml={4}
+                p={2}
+                onClick={() => setDrawerAvailable(true)}
+                zIndex={2}
+                variant="ghost"
+                leftIcon={<HamburgerIcon />}
+              >
+                See posts
+              </Button>
+            )}
             <AnimateSharedLayout>
               <MotionBox
                 as="main"
@@ -164,7 +232,7 @@ const Home: React.FC = () => {
                     fontSize="xs"
                     color="gray.400"
                     fontWeight="medium"
-                    onClick={loadMore}
+                    onClick={handleDismissAllPosts}
                     display={isEmpty ? 'none' : 'block'}
                   >
                     Dismiss all
@@ -173,8 +241,10 @@ const Home: React.FC = () => {
                 {!isEmpty && (
                   <>
                     <PostsList
+                      markAsReadPost={markAsReadPost}
+                      handleDismissPost={handleDismissPost}
                       handleSelectPost={handleSelectPost}
-                      posts={posts.map((postData) => postData)}
+                      posts={posts.map((pData) => pData)}
                     />
                   </>
                 )}
@@ -182,26 +252,7 @@ const Home: React.FC = () => {
 
                 {isLoadingInitialData && <Spinner color="secondary.100" />}
 
-                {!isLoadingInitialData && (
-                  <Button
-                    rounded="md"
-                    variant="solid"
-                    fontSize="xs"
-                    color="white"
-                    fontWeight="medium"
-                    onClick={loadMore}
-                    alignSelf="center"
-                    justifySelf="center"
-                    display="block"
-                    bg="secondary.100"
-                    mb={2}
-                    mx="auto"
-                    isLoading={isLoadingMore}
-                    _hover={{ bg: 'secondary.100', opacity: 0.6 }}
-                  >
-                    {posts.length > 0 ? 'Load more' : 'Load posts'}
-                  </Button>
-                )}
+                {!isLoadingInitialData && refreshButton}
               </MotionBox>
 
               <MotionBox
@@ -230,14 +281,22 @@ const Home: React.FC = () => {
         >
           <DrawerOverlay />
           <DrawerContent>
+            <DrawerHeader zIndex={10}>
+              {' '}
+              <DrawerCloseButton />
+            </DrawerHeader>
+
             <DrawerBody>
               <Heading as="h1" size="lg" mt={10} mb={8}>
                 Top posts
               </Heading>
               <PostsList
+                handleDismissPost={handleDismissPost}
+                markAsReadPost={markAsReadPost}
                 handleSelectPost={handleSelectPost}
-                posts={posts.map((postData) => postData)}
+                posts={posts.map((pData) => pData)}
               />
+              {refreshButton}
             </DrawerBody>
           </DrawerContent>
         </Drawer>
